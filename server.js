@@ -36,22 +36,6 @@ var apiRoutes = express.Router();
 
 // more routes for our API will happen here
 
-apiRoutes.route('/users')
-    // create a user (accessed at POST http://localhost:8080/api/users)
-    .post(function(req, res) {
-        var user = new User();      // create a new instance of the User model
-        user.name = req.body.name;  // set the users name (comes from the request)
-        user.password = req.body.password;  // set the users password (comes from the request)
-        user.admin = req.body.admin;  // set the users admin (comes from the request)
-
-        // save the user and check for errors
-        var promise = user.save();
-        promise.then(function () {
-	      res.json({ message: 'user created!' });
-	    }).catch(function(err) {
-	    	res.send(err);
-	    });
-    })
 
 // route to authenticate a user (POST http://localhost:8080/api/authenticate)
 apiRoutes.post('/authenticate', function(req, res) {
@@ -100,6 +84,7 @@ apiRoutes.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  console.log(token);
 
   // decode token
   if (token) {
@@ -140,6 +125,23 @@ apiRoutes.get('/users', function(req, res) {
     res.json(users);
   });
 });
+
+apiRoutes.route('/users')
+    // create a user (accessed at POST http://localhost:8080/api/users)
+    .post(function(req, res) {
+        var user = new User();      // create a new instance of the User model
+        user.name = req.body.name;  // set the users name (comes from the request)
+        user.password = req.body.password;  // set the users password (comes from the request)
+        user.admin = req.body.admin;  // set the users admin (comes from the request)
+
+        // save the user and check for errors
+        var promise = user.save();
+        promise.then(function () {
+        res.json({ message: 'user created!' });
+      }).catch(function(err) {
+        res.send(err);
+      });
+    })
 
 
 
